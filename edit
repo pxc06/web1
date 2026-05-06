@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>云端编程实验室 - Artech</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+
+    <style>
+        /* ========== 全局重置 ========== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+            color: #333;
+            overflow-x: hidden;
+        }
+        a { text-decoration: none !important; }
+
+        /* ========== 导航栏 ========== */
+        .navbar-custom {
+            background-color: #1b2a4a;
+            padding: 12px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        }
+        .navbar-custom .navbar-brand {
+            color: #fff !important;
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        .navbar-custom .navbar-brand span { color: #4fc3f7; }
+        .navbar-custom .nav-link {
+            color: rgba(255,255,255,0.8) !important;
+            font-size: 15px;
+            margin-left: 12px;
+            transition: 0.3s;
+        }
+        .navbar-custom .nav-link:hover { color: #fff !important; }
+        .nav-btn {
+            border: 1px solid rgba(255,255,255,0.5);
+            color: #fff;
+            background: transparent;
+            padding: 5px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+            outline: none;
+        }
+        .nav-btn:hover { background: #fff; color: #1b2a4a; }
+        .nav-btn.primary { background: #1e88e5; border-color: #1e88e5; }
+        .nav-btn.primary:hover { background: #1565c0; border-color: #1565c0; }
+
+        /* 用户信息 */
+        .user-info {
+            color: #4fc3f7;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .btn-logout {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: #fff;
+            padding: 4px 15px;
+            border-radius: 15px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-logout:hover { background: rgba(255,255,255,0.3); }
+
+        /* ========== Hero 横幅 ========== */
+        .hero {
+            background: linear-gradient(135deg, #0d47a1, #1565c0, #1e88e5);
+            color: #fff;
+            text-align: center;
+            padding: 90px 20px 100px;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px);
+            background-size: 28px 28px;
+        }
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -60px;
+            left: -10%;
+            width: 120%;
+            height: 120px;
+            background: #f4f7fa;
+            border-radius: 50% 50% 0 0;
+        }
+        .hero h1 {
+            font-size: 40px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            position: relative;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        }
+        .hero .subtitle {
+            font-size: 17px;
+            line-height: 2;
+            opacity: 0.92;
+            max-width: 650px;
+            margin: 0 auto 40px;
+            position: relative;
+        }
+        .hero .btn-start {
+            background: #e53935;
+            color: #fff;
+            border: none;
+            padding: 14px 55px;
+            font-size: 18px;
+            border-radius: 30px;
+            position: relative;
+            transition: 0.3s;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(229,57,53,0.4);
+        }
+        .hero .btn-start:hover {
+            background: #c62828;
+            box-shadow: 0 8px 25px rgba(229,57,53,0.5);
+            transform: translateY(-3px);
+        }
+
+        /* ========== 功能展示区 ========== */
+        .feature-showcase {
+            padding: 80px 0;
+            background: #f4f7fa;
+        }
+        .section-heading {
+            text-align: center;
+            margin-bottom: 55px;
+        }
+        .section-heading h2 {
+            font-size: 32px;
+            font-weight: bold;
+            color: #1a237e;
+        }
+        .section-heading .bar {
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #1e88e5, #66bb6a);
+            margin: 14px auto 0;
+            border-radius: 2px;
+        }
+        .showcase-box {
+            background: #fff;
+            border-radius: 12px;
+            padding: 45px 35px;
+            height: 100%;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.06);
+            transition: 0.35s;
+            text-align: center;
+        }
+        .showcase-box:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.12);
+        }
+        .showcase-box .icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 22px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: #fff;
+        }
+        .icon-blue  { background: linear-gradient(135deg, #42a5f5, #1565c0); }
+        .icon-green { background: linear-gradient(135deg, #66bb6a, #2e7d32); }
+        .showcase-box h3 {
+            font-size: 22px;
+            font-weight: bold;
+            color: #1a237e;
+            margin-bottom: 14px;
+        }
+        .showcase-box p {
+            font-size: 15px;
+            color: #666;
+            line-height: 1.85;
+            margin-bottom: 0;
+        }
+        .btn-detail {
+            margin-top: 20px;
+            background: #1e88e5;
+            color: #fff;
+            border: none;
+            padding: 9px 35px;
+            border-radius: 22px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-detail:hover { background: #1565c0; transform: scale(1.05); }
+
+        /* ========== 课程特色区 ========== */
+        .course-section {
+            padding: 80px 0;
+            background: #fff;
+        }
+        .course-card {
+            text-align: center;
+            padding: 38px 22px;
+            border-radius: 12px;
+            border: 1px solid #eee;
+            height: 100%;
+            transition: 0.35s;
+        }
+        .course-card:hover {
+            border-color: #1e88e5;
+            box-shadow: 0 8px 30px rgba(30,136,229,0.12);
+            transform: translateY(-6px);
+        }
+        .course-card .circle {
+            width: 85px;
+            height: 85px;
+            border-radius: 50%;
+            margin: 0 auto 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+        }
+        .circle-1 { background: #e3f2fd; }
+        .circle-2 { background: #e8f5e9; }
+        .circle-3 { background: #fff3e0; }
+        .course-card h4 {
+            font-size: 19px;
+            font-weight: bold;
+            color: #1a237e;
+            margin-bottom: 12px;
+        }
+        .course-card p {
+            font-size: 14px;
+            color: #888;
+            line-height: 1.75;
+            margin: 0;
+        }
+
+        /* ========== 页脚 ========== */
+        .site-footer {
+            background: #1b2a4a;
+            color: rgba(255,255,255,0.6);
+            padding: 40px 0 22px;
+            text-align: center;
+        }
+        .footer-nav a {
+            color: rgba(255,255,255,0.6);
+            margin: 0 15px;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+        .footer-nav a:hover { color: #fff; }
+        .footer-copy {
+            margin-top: 18px;
+            font-size: 13px;
+            color: rgba(255,255,255,0.4);
+        }
+
+        /* ========== 登录/注册弹窗 ========== */
+        .modal-mask {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            animation: fadeIn 0.2s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .modal-container {
+            background: #fff;
+            border-radius: 14px;
+            width: 440px;
+            max-width: 92vw;
+            padding: 38px 32px 30px;
+            position: relative;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s ease;
+        }
+        .modal-container .close-btn {
+            position: absolute;
+            top: 14px;
+            right: 20px;
+            font-size: 30px;
+            color: #bbb;
+            cursor: pointer;
+            border: none;
+            background: none;
+            line-height: 1;
+            transition: 0.2s;
+        }
+        .modal-container .close-btn:hover { color: #333; }
+        .modal-container h3 {
+            text-align: center;
+            font-size: 24px;
+            color: #1a237e;
+            margin-bottom: 28px;
+            font-weight: bold;
+        }
+        .modal-container .form-group label {
+            font-size: 14px;
+            color: #555;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .modal-container .form-control {
+            border-radius: 8px;
+            padding: 11px 15px;
+            font-size: 15px;
+            border: 1.5px solid #ddd;
+            transition: 0.3s;
+        }
+        .modal-container .form-control:focus {
+            border-color: #1e88e5;
+            box-shadow: 0 0 0 3px rgba(30,136,229,0.15);
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #1e88e5, #1565c0);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 12px;
+        }
+        .btn-submit:hover {
+            background: linear-gradient(135deg, #1565c0, #0d47a1);
+            box-shadow: 0 4px 15px rgba(21,101,192,0.4);
+        }
+        .btn-submit:disabled {
+            background: #90caf9;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .switch-text {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #999;
+        }
+        .switch-text a {
+            color: #1e88e5;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .switch-text a:hover { text-decoration: underline !important; }
+
+        /* 提示信息 */
+        .alert-msg {
+            padding: 11px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+        }
+        .alert-success { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+        .alert-error   { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
+        .alert-info    { background: #e3f2fd; color: #1565c0; border: 1px solid #90caf9; }
+
+        /* ========== 移动端响应式 ========== */
+        @media (max-width: 767.98px) {
+            .hero { padding: 55px 15px 70px; }
+            .hero h1 { font-size: 26px; }
+            .hero .subtitle { font-size: 14px; line-height: 1.8; }
+            .hero .btn-start { padding: 11px 40px; font-size: 16px; }
+            .feature-showcase, .course-section { padding: 50px 0; }
+            .section-heading { margin-bottom: 35px; }
+            .section-heading h2 { font-size: 26px; }
+            .showcase-box { margin-bottom: 20px; padding: 30px 20px; }
+            .course-card { margin-bottom: 20px; }
+            .modal-container { width: 95vw; padding: 28px 20px 22px; }
+            .modal-container h3 { font-size: 20px; }
+            .footer-nav a { margin: 0 8px; font-size: 13px; }
+        }
+        @media (max-width: 575.98px) {
+            .nav-btn { padding: 4px 14px; font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ====================================================================
+     Vue 应用挂载根节点
+     ==================================================================== -->
+<div id="app">
+
+    <!-- ==================== 登录弹窗 ==================== -->
+    <login-modal
+        v-if="showLogin"
+        @close="showLogin = false"
+        @switch-to-register="showLogin = false; showRegister = true"
+        @login-success="handleLoginSuccess">
+    </login-modal>
+
+    <!-- ==================== 注册弹窗 ==================== -->
+    <register-modal
+        v-if="showRegister"
+        @close="showRegister = false"
+        @switch-to-login="showRegister = false; showLogin = true"
+        @register-success="handleRegisterSuccess">
+    </register-modal>
+
+    <!-- ==================== 头部导航 ==================== -->
+    <app-header
+        :current-user="currentUser"
+        @open-login="showLogin = true"
+        @open-register="showRegister = true"
+        @logout="handleLogout">
+    </app-header>
+
+    <!-- ==================== Banner 横幅 ==================== -->
+    <app-banner @learn-now="handleLearnNow"></app-banner>
+
+    <!-- ==================== 功能展示 ==================== -->
+    <feature-showcase @learn-more="handleLearnMore"></feature-showcase>
+
+    <!-- ==================== 课程特色 ==================== -->
+    <course-features></course-features>
+
+    <!-- ==================== 页脚 ==================== -->
+    <app-footer></app-footer>
+
+</div>
+
+<!-- ====================================================================
+     JavaScript 依赖
+     ==================================================================== -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios@1.6.2/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+
+<script>
+// ====================================================================
+// API 服务封装（模拟后端，使用 localStorage）
+// 实际部署时替换为真实 axios 请求
+// ====================================================================
+var API_BASE = '/ssm-user-system/api'; // 部署后指向 SSM 后端
+
+var ApiService = {
+
+    /**
+     * 模拟用户注册（localStorage）
+     * 对应后端：POST /api/user/register
+     */
+    register: function(userData) {
+        return new Promise(function(resolve, reject) {
+            setTimeout(function() {
+                var users = JSON.parse(localStorage.getItem('artech_users') || '[]');
+
+                // 检查用户名是否已存在
+                var exists = users.find(function(u) {
+                    return u.username === userData.username;
+                });
+                if (exists) {
+                    reject({ response: { data: { code: 400, message: '用户名 "' + userData.username + '" 已存在！' } } });
+                    return;
+                }
+
+                // 创建新用户
+                var newUser = {
+                    id: Date.now(),
+                    username: userData.username,
+                    email: userData.email,
+                    createTime: new Date().toISOString()
+                };
+                users.push({
+                    username: userData.username,
+                    password: userData.password,
+                    email: userData.email
+                });
+                localStorage.setItem('artech_users', JSON.stringify(users));
+
+                resolve({ data: { code: 200, message: '注册成功！', data: newUser } });
+            }, 600);
+        });
+    },
+
+    /**
+     * 模拟用户登录（localStorage）
+     * 对应后端：POST /api/user/login
+     */
+    login: function(userData) {
+        return new Promise(function(resolve, reject) {
+            setTimeout(function() {
+                var users = JSON.parse(localStorage.getItem('artech_users') || '[]');
+                var user = users.find(function(u) {
+                    return u.username === userData.username && u.password === userData.password;
+                });
+
+                if (user) {
+                    resolve({
+                        data: {
+                            code: 200,
+                            message: '登录成功！',
+                            data: { id: Date.now(), username: user.username, email: user.email }
+                        }
+                    });
+                } else {
+                    resolve({ data: { code: 400, message: '用户名或密码错误！' } });
+                }
+            }, 500);
+        });
+    },
+
+    /**
+     * 获取用户列表
+     * 对应后端：GET /api/user/list
+     */
+    getUsers: function() {
+        return new Promise(function(resolve) {
+            var users = JSON.parse(localStorage.getItem('artech_users') || '[]');
+            resolve({ data: { code: 200, message: '查询成功', data: users.length } });
+        });
+    }
+};
+
+// ====================================================================
+// 组件：AppHeader（头部导航）
+// ====================================================================
+Vue.component('app-header', {
+    props: ['currentUser'],
+    template: `
+        <nav class="navbar navbar-expand-md navbar-dark sticky-top navbar-custom">
+            <div class="container">
+                <a class="navbar-brand" href="#">☁ 云端科技 <span>Artech</span></a>
+                <button class="navbar-toggler" type="button"
+                        data-toggle="collapse" data-target="#mainNav"
+                        aria-controls="mainNav" aria-expanded="false" aria-label="导航切换">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="mainNav">
+                    <ul class="navbar-nav ml-auto align-items-center">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#home">首页</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#features">功能</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#courses">课程特色</a>
+                        </li>
+                        <li class="nav-item d-flex align-items-center" v-if="currentUser">
+                            <span class="user-info">👤 {{ currentUser.username }}</span>
+                            <button class="btn-logout" @click="$emit('logout')">退出</button>
+                        </li>
+                        <template v-else>
+                            <li class="nav-item">
+                                <button class="nav-btn" @click="$emit('open-login')">登录</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-btn primary" @click="$emit('open-register')">注册</button>
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    `
+});
+
+// ====================================================================
+// 组件：AppBanner（Hero 横幅）
+// ====================================================================
+Vue.component('app-banner', {
+    template: `
+        <section class="hero" id="home">
+            <div class="container">
+                <h1>☁ 云端编程，浏览器里边学边练</h1>
+                <p class="subtitle">
+                    软件定义一切，网络连接时空，<br>
+                    学习软件技术，创造未来世界。
+                </p>
+                <button class="btn-start" @click="onLearnNow">
+                    🚀 马上学习
+                </button>
+            </div>
+        </section>
+    `,
+    methods: {
+        onLearnNow: function() {
+            alert(
+                '🎉 欢迎来到云端编程实验室！\n\n' +
+                '每人拥有自己完全独立的编程实验室，\n' +
+                '内置所有基础软件及学习素材。\n\n' +
+                '打开浏览器，即刻开始编程！'
+            );
+            this.$emit('learn-now');
+        }
+    }
+});
+
+// ====================================================================
+// 组件：FeatureShowcase（两大功能展示）
+// ====================================================================
+Vue.component('feature-showcase', {
+    data: function() {
+        return {
+            items: [
+                {
+                    icon: 'icon-blue',
+                    iconText: '☁',
+                    title: '云端编程实验室',
+                    desc: '每人拥有自己完全独立的编程实验室，内置所有基础软件及学习素材。打开浏览器，即刻开始编程！'
+                },
+                {
+                    icon: 'icon-green',
+                    iconText: '🖥',
+                    title: '双屏学习',
+                    desc: '双屏学习，小屏视频互动，大屏实际操作，学习无障碍。打开浏览器，即刻开始编程！'
+                }
+            ]
+        };
+    },
+    template: `
+        <section class="feature-showcase" id="features">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-5 col-md-6 mb-4" v-for="(item, index) in items" :key="index">
+                        <div class="showcase-box">
+                            <div class="icon" :class="item.icon">
+                                <span style="font-size:36px">{{ item.iconText }}</span>
+                            </div>
+                            <h3>{{ item.title }}</h3>
+                            <p>{{ item.desc }}</p>
+                            <button class="btn-detail" @click="onLearnMore(item.title)">
+                                🔍 了解
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    `,
+    methods: {
+        onLearnMore: function(title) {
+            var details = {
+                '云端编程实验室':
+                    '📦 云端编程实验室功能介绍：\n\n' +
+                    '• 完全独立的云端开发环境\n' +
+                    '• 内置 Java / Python / C++ 等编译器\n' +
+                    '• 预装所有基础软件及学习素材\n' +
+                    '• 数据持久化，下次打开继续学习\n' +
+                    '• 无需安装，打开浏览器即刻编程',
+                '双屏学习':
+                    '🖥 双屏学习功能介绍：\n\n' +
+                    '• 小屏播放教学视频，实时互动\n' +
+                    '• 大屏进行代码编写和实际操作\n' +
+                    '• 视频与代码同步，边看边练\n' +
+                    '• 支持多终端，随时随地学习\n' +
+                    '• 学习进度自动记录'
+            };
+            alert(details[title] || '📚 ' + title + ' 功能详情');
+            this.$emit('learn-more', title);
+        }
+    }
+});
+
+// ====================================================================
+// 组件：CourseFeatures（课程特色）
+// ====================================================================
+Vue.component('course-features', {
+    data: function() {
+        return {
+            features: [
+                {
+                    emoji: '📘',
+                    circleClass: 'circle-1',
+                    title: '丰富的教学服务',
+                    desc: '特色教学服务功能，各种配套教学服务，在线学习从未如此轻松。'
+                },
+                {
+                    emoji: '⏱',
+                    circleClass: 'circle-2',
+                    title: '多元的学习方式',
+                    desc: '知识提炼、答疑解惑、实时互动、开发有特色的教学服务方式。'
+                },
+                {
+                    emoji: '⭐',
+                    circleClass: 'circle-3',
+                    title: '高品质的学习体验',
+                    desc: '多屏合一，随时学习，随时在线，学习记录一目了然，知识充电不再受限。'
+                }
+            ]
+        };
+    },
+    template: `
+        <section class="course-section" id="courses">
+            <div class="container">
+                <div class="section-heading">
+                    <h2>课程特色</h2>
+                    <div class="bar"></div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 mb-4" v-for="(item, index) in features" :key="index">
+                        <div class="course-card">
+                            <div class="circle" :class="item.circleClass">
+                                {{ item.emoji }}
+                            </div>
+                            <h4>{{ item.title }}</h4>
+                            <p>{{ item.desc }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    `
+});
+
+// ====================================================================
+// 组件：AppFooter（页脚）
+// ====================================================================
+Vue.component('app-footer', {
+    template: `
+        <footer class="site-footer" id="footer">
+            <div class="container">
+                <div class="footer-nav mb-3">
+                    <a href="#">关于我们</a>
+                    <a href="#">服务条款</a>
+                    <a href="#">帮助中心</a>
+                    <a href="#">联系我们</a>
+                </div>
+                <p class="footer-copy">© 2024 云端科技 Artech All rights reserved</p>
+            </div>
+        </footer>
+    `
+});
+
+// ====================================================================
+// 组件：LoginModal（登录弹窗）
+// ====================================================================
+Vue.component('login-modal', {
+    template: `
+        <div class="modal-mask" @click.self="$emit('close')">
+            <div class="modal-container">
+                <button class="close-btn" @click="$emit('close')">&times;</button>
+                <h3>🔑 用户登录</h3>
+
+                <div v-if="alert.show" class="alert-msg" :class="'alert-' + alert.type">
+                    {{ alert.message }}
+                </div>
+
+                <div class="form-group">
+                    <label>用户名</label>
+                    <input type="text"
+                           class="form-control"
+                           v-model.trim="form.username"
+                           placeholder="请输入用户名"
+                           @keyup.enter="handleLogin">
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password"
+                           class="form-control"
+                           v-model.trim="form.password"
+                           placeholder="请输入密码"
+                           @keyup.enter="handleLogin">
+                </div>
+
+                <button class="btn-submit" @click="handleLogin" :disabled="loading">
+                    {{ loading ? '⏳ 登录中...' : '🚀 登录' }}
+                </button>
+
+                <p class="switch-text">
+                    还没有账号？<a @click="$emit('switch-to-register')">立即注册</a>
+                </p>
+            </div>
+        </div>
+    `,
+    data: function() {
+        return {
+            form: { username: '', password: '' },
+            loading: false,
+            alert: { show: false, type: '', message: '' }
+        };
+    },
+    methods: {
+        showAlert: function(type, msg) {
+            this.alert = { show: true, type: type, message: msg };
+        },
+        handleLogin: function() {
+            var self = this;
+            self.alert.show = false;
+
+            if (!self.form.username || !self.form.password) {
+                self.showAlert('error', '⚠️ 请填写完整的登录信息！');
+                return;
+            }
+
+            self.loading = true;
+
+            // 调用 API（当前为模拟，部署后对接 SSM 后端）
+            ApiService.login({
+                username: self.form.username,
+                password: self.form.password
+            })
+            .then(function(response) {
+                self.loading = false;
+                var res = response.data;
+
+                if (res.code === 200) {
+                    self.showAlert('success', '✅ ' + res.message);
+                    setTimeout(function() {
+                        self.$emit('login-success', res.data);
+                        self.$emit('close');
+                        self.form = { username: '', password: '' };
+                        self.alert.show = false;
+                    }, 800);
+                } else {
+                    self.showAlert('error', '❌ ' + res.message);
+                }
+            })
+            .catch(function(error) {
+                self.loading = false;
+                self.showAlert('error', '❌ 网络错误，请检查后端服务是否启动！');
+                console.error('登录失败:', error);
+            });
+        }
+    }
+});
+
+// ====================================================================
+// 组件：RegisterModal（注册弹窗）
+// ====================================================================
+Vue.component('register-modal', {
+    template: `
+        <div class="modal-mask" @click.self="$emit('close')">
+            <div class="modal-container">
+                <button class="close-btn" @click="$emit('close')">&times;</button>
+                <h3>📝 用户注册</h3>
+
+                <div v-if="alert.show" class="alert-msg" :class="'alert-' + alert.type">
+                    {{ alert.message }}
+                </div>
+
+                <div class="form-group">
+                    <label>用户名</label>
+                    <input type="text"
+                           class="form-control"
+                           v-model.trim="form.username"
+                           placeholder="请输入用户名"
+                           @keyup.enter="handleRegister">
+                </div>
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email"
+                           class="form-control"
+                           v-model.trim="form.email"
+                           placeholder="请输入邮箱">
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password"
+                           class="form-control"
+                           v-model.trim="form.password"
+                           placeholder="请输入密码（至少6位）">
+                </div>
+                <div class="form-group">
+                    <label>确认密码</label>
+                    <input type="password"
+                           class="form-control"
+                           v-model.trim="form.confirmPassword"
+                           placeholder="请再次输入密码"
+                           @keyup.enter="handleRegister">
+                </div>
+
+                <button class="btn-submit" @click="handleRegister" :disabled="loading">
+                    {{ loading ? '⏳ 注册中...' : '✨ 立即注册' }}
+                </button>
+
+                <p class="switch-text">
+                    已有账号？<a @click="$emit('switch-to-login')">立即登录</a>
+                </p>
+            </div>
+        </div>
+    `,
+    data: function() {
+        return {
+            form: {
+                username: '',
+                email: '',
+                password: '',
+                confirmPassword: ''
+            },
+            loading: false,
+            alert: { show: false, type: '', message: '' }
+        };
+    },
+    methods: {
+        showAlert: function(type, msg) {
+            this.alert = { show: true, type: type, message: msg };
+        },
+        handleRegister: function() {
+            var self = this;
+            self.alert.show = false;
+
+            // 表单验证
+            if (!self.form.username || !self.form.email ||
+                !self.form.password || !self.form.confirmPassword) {
+                self.showAlert('error', '⚠️ 请填写所有注册信息！');
+                return;
+            }
+
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(self.form.email)) {
+                self.showAlert('error', '❌ 请输入有效的邮箱地址！');
+                return;
+            }
+
+            if (self.form.password.length < 6) {
+                self.showAlert('error', '❌ 密码长度不能少于6位！');
+                return;
+            }
+
+            if (self.form.password !== self.form.confirmPassword) {
+                self.showAlert('error', '❌ 两次输入的密码不一致！');
+                return;
+            }
+
+            // 调用 API（当前为模拟，部署后对接 SSM 后端）
+            self.loading = true;
+
+            ApiService.register({
+                username: self.form.username,
+                email: self.form.email,
+                password: self.form.password
+            })
+            .then(function(response) {
+                self.loading = false;
+                var res = response.data;
+                self.showAlert('success', '✅ ' + res.message);
+
+                setTimeout(function() {
+                    self.$emit('register-success', res.data);
+                    self.$emit('close');
+                    self.form = { username: '', email: '', password: '', confirmPassword: '' };
+                    self.alert.show = false;
+                }, 1500);
+            })
+            .catch(function(error) {
+                self.loading = false;
+                var msg = '注册失败，请重试！';
+                if (error.response && error.response.data) {
+                    msg = error.response.data.message || msg;
+                }
+                self.showAlert('error', '❌ ' + msg);
+                console.error('注册失败:', error);
+            });
+        }
+    }
+});
+
+// ====================================================================
+// Vue 根实例
+// ====================================================================
+new Vue({
+    el: '#app',
+    data: {
+        showLogin: false,
+        showRegister: false,
+        currentUser: null    // 当前登录用户
+    },
+    methods: {
+        handleLearnNow: function() {
+            console.log('[事件] 用户点击了"马上学习"');
+        },
+        handleLearnMore: function(title) {
+            console.log('[事件] 用户想了解更多:', title);
+        },
+        handleLoginSuccess: function(userData) {
+            this.currentUser = userData;
+            console.log('[事件] 登录成功:', userData);
+        },
+        handleRegisterSuccess: function(userData) {
+            console.log('[事件] 注册成功:', userData);
+            // 注册成功后自动切换到登录
+            this.showRegister = false;
+            this.showLogin = true;
+        },
+        handleLogout: function() {
+            this.currentUser = null;
+            alert('👋 已退出登录！');
+        }
+    },
+    // 页面加载时检查是否有已登录用户（模拟 session）
+    mounted: function() {
+        var savedUser = localStorage.getItem('artech_current_user');
+        if (savedUser) {
+            try {
+                this.currentUser = JSON.parse(savedUser);
+            } catch(e) {
+                localStorage.removeItem('artech_current_user');
+            }
+        }
+    },
+    watch: {
+        currentUser: function(newVal) {
+            if (newVal) {
+                localStorage.setItem('artech_current_user', JSON.stringify(newVal));
+            } else {
+                localStorage.removeItem('artech_current_user');
+            }
+        }
+    }
+});
+</script>
+
+</body>
+</html>
